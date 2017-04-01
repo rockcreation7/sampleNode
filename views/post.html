@@ -1,0 +1,88 @@
+<html>
+
+<head>
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/4.3.0/min/dropzone.min.css">
+    <link rel="stylesheet" type="text/css" href="../css/post.css">
+    <link rel="stylesheet" type="text/css" href="../css/dropzone.css">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery.form/3.51/jquery.form.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/4.3.0/dropzone.js"></script>
+    <script src="../js/post.js"></script>
+    <script src="//cdn.tinymce.com/4/tinymce.min.js"></script>
+    <script>
+    tinymce.init({
+        selector: 'textarea',
+        theme: 'modern',
+        height: 300,
+        paste_data_images: true,
+        plugins: [
+            'advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker',
+            'searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking',
+            'save table contextmenu directionality emoticons template paste textcolor example example_2'
+        ],
+        content_css: 'css/edit.css',
+        toolbar: 'insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | print preview media fullpage | forecolor backcolor emoticons example example_2',
+        extended_valid_elements: 'mycustomblock[id],mycustominline',
+        custom_elements: 'mycustomblock,~mycustominline'
+    });
+    </script>
+    <title>Show all post</title>
+</head>
+
+<body>
+    <h1>Create post</h1>
+    <button class="new_post">
+        New Post
+    </button>
+    <br>
+    <br>
+    <div class="new_post_id">
+    </div>
+    <br>
+    <div class="create_post">
+        <div style="display:none">
+            <input class="post_title" value="" type="text">
+            <br>
+            <br>
+            <input class="post_des" value="" type="text">
+            <br>
+            <br>
+            <textarea class="post_content"></textarea>
+            <div class="post_photo_pre">
+                <div class="clear">
+                </div>
+            </div>
+            <div class="clear">
+            </div>
+            <br>
+            <div class="clear"></div>
+            <div id="upload-widget" class="up_photo ">
+            </div>
+            <div class="clear">
+            </div>
+            <br>
+            <button class="submit_post">
+                Submit
+            </button>
+        </div>
+    </div>
+    <br>
+    <br>
+    <h1>All post</h1>
+    <div class="all_post"></div>
+    <br>
+    <br>
+    <h1>Remove post</h1>
+    <div class="remove_post">
+        <input class="post_id" value="" type="text">
+        <br>
+        <br>
+        <button class="delete_post">
+            Delete
+        </button>
+    </div>
+    <div class="ab">
+    </div>
+</body>
+
+</html>
