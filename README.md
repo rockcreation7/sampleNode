@@ -1,4 +1,4 @@
-# sampleNode - 2017 work
+# NodeJs Server - 2017 work
 
 This a sample code of NodeJS and MongoDB development.
 
