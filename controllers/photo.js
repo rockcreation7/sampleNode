@@ -1,121 +1,85 @@
-var Photo = require('../models/photo');
-var fs = require("fs");
-var multer = require('multer');
-var bodyParser = require('body-parser');
+var Photo = require("../models/photo")
+var fs = require("fs")
+var multer = require("multer")
+var bodyParser = require("body-parser")
 
 var storage = multer.diskStorage({
-    destination: function(req, file, callback) {
-        callback(null, './public/uploads');
-    },
-    filename: function(req, file, callback) {
-        callback(null, file.fieldname + '-' + Date.now());
-    }
-});
+  destination: function (req, file, callback) {
+    callback(null, "./public/uploads")
+  },
+  filename: function (req, file, callback) {
+    callback(null, file.fieldname + "-" + Date.now())
+  },
+})
 
 var upload = multer({
-    storage: storage,
-    limits: { fileSize: 500000 }
-}).single('file', 5);
+  storage: storage,
+  limits: { fileSize: 500000 },
+}).single("file", 5)
 
+exports.postPhotos = function (req, res) {
+  upload(req, res, function (err) {
+    if (err) {
+      return res.end("Error uploading file.")
+    }
 
-exports.postPhotos = function(req, res) {
+    var photo = new Photo()
 
-    upload(req, res, function(err) {
+    photo.name = req.file.filename
 
-        if (err) {
-            return res.end("Error uploading file.");
-        }
+    photo.org_name = req.file.originalname
 
-        var photo = new Photo();
+    photo.postid = req.headers.postid
 
-        photo.name = req.file.filename;
+    console.log(req.headers.postid)
 
-        photo.org_name = req.file.originalname;
+    photo.save(function (err) {
+      if (err) res.send(err)
+      return res.json({ message: "Photo added!", data: photo })
+    })
+  })
+}
 
-        photo.postid = req.headers.postid;
+exports.getPhotos = function (req, res) {
+  Photo.find(function (err, photos) {
+    if (err) res.send(err)
 
-        console.log(req.headers.postid);
+    res.json(photos)
+  })
+}
 
-        photo.save(function(err) {
-            if (err)
-                res.send(err);
-            return res.json({ message: 'Photo added!', data: photo });
-        });
+exports.getPostPhoto = function (req, res) {
+  Photo.find({ postid: req.params.post_id }, function (err, photos) {
+    if (err) res.send(err)
+    console.log(photos)
+    res.json(photos)
+  })
+}
 
+exports.deletePhoto = function (req, res) {
+  var a = req.body.id
+  var b = req.body.name
 
-    });
+  console.log(a)
 
-};
+  Photo.find({ _id: a }, function (err, obj) {
+    if (err) {
+      return res.send("cannot del photo")
+    }
 
+    if (obj.length) {
+      var file_name_cur = obj[0].name
 
-exports.getPhotos = function(req, res) {
+      console.log(obj[0].name)
 
-    Photo.find(function(err, photos) {
-        if (err)
-            res.send(err);
+      Photo.remove({ _id: a }, function (err) {
+        if (err) res.send(err)
+        return res.json({ message: "photo removed from the locker!" })
+      })
 
-        res.json(photos);
-    });
-
-};
-
-
-exports.getPostPhoto = function(req, res) {
-
-
-    Photo.find({ postid: req.params.post_id }, function(err, photos) {
-        if (err)
-            res.send(err);
-        console.log(photos)
-        res.json(photos);
-    });
-};
-
-
-exports.deletePhoto = function(req, res) {
-
-
-    var a = req.body.id;
-    var b = req.body.name;
-
-    console.log(a);
-
-    Photo.find({ _id: a }, function(err, obj) {
-
-        if (err) {
-            return res.send("cannot del photo");
-        }
-
-
-
-
-
-        if (obj.length) {
-
-            var file_name_cur = obj[0].name;
-
-
-            console.log(obj[0].name);
-
-            Photo.remove({ _id: a }, function(err) {
-                if (err)
-                    res.send(err);
-                return res.json({ message: 'photo removed from the locker!' });
-            });
-
-            fs.unlink(process.cwd() + "/public/uploads/" + file_name_cur);
-
-
-
-        } else {
-
-            return res.send("cannot del photo");
-
-        }
-
-
-
-    });
-
-
-};
+      fs.unlink(process.cwd() + "/public/uploads/" + file_name_cur)
+    } else {
+      return res.send("cannot del photo")
+    }
+  })
+}

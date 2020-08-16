@@ -1,15 +1,15 @@
-.col_wrap{
+.col_wrap {
   max-width: 100%;
   width: 100%;
   margin: 0;
-  padding: 0
+  padding: 0;
 }
 
-.col_1_2{
-  width: 50%; 
+.col_1_2 {
+  width: 50%;
   margin: 0;
   padding: 0;
-  border: 0px dashed #BBB !important;
+  border: 0px dashed #bbb !important;
   margin-left: 0px !important;
   box-sizing: border-box !important;
 }

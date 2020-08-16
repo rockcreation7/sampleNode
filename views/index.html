@@ -1,131 +1,132 @@
 <html>
-<head>
+  <head>
     <title>File upload Node.</title>
-</head>
-<body>
-    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/4.3.0/min/dropzone.min.css">
+  </head>
+  <body>
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/4.3.0/min/dropzone.min.css"
+    />
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
     <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery.form/3.51/jquery.form.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/4.3.0/dropzone.js"></script>
-    <form id="upload-widget" method="post" action="api/upload" class="dropzone">
-    </form>
-    <div class="ab">
-    </div>
+    <form
+      id="upload-widget"
+      method="post"
+      action="api/upload"
+      class="dropzone"
+    ></form>
+    <div class="ab"></div>
     <script>
-    function get_all_image() {
-
+      function get_all_image() {
         var settings = {
-            "async": true,
-            "crossDomain": true,
-            "url": "http://127.0.0.1:3000/api/upload",
-            "method": "GET"
-        };
-
-        $.ajax(settings).done(function(response) {
-            var obj = response;
-            $('.ab').html("");
-
-            $.each(obj, function(index, value) {
-
-                var str = '';
-                str += '<div class="item ' + value.name + ' ' + value._id + '" style="background-image:url(../uploads/' + value.name + ')">';
-                str += '</div>';
-
-                $('.ab').prepend(str);
-            });
-
-        });
-
-
-
-    }
-
-    function remove_image(name) {
-        var data = "id=" + name;
-
-        var xhr = new XMLHttpRequest();
-        xhr.withCredentials = true;
-
-        xhr.addEventListener("readystatechange", function() {
-            if (this.readyState === 4) {
-                console.log(this.responseText);
-            }
-        });
-
-        xhr.open("DELETE", "http://127.0.0.1:3000/api/upload");
-        xhr.setRequestHeader("cache-control", "no-cache");
-        xhr.setRequestHeader("content-type", "application/x-www-form-urlencoded");
-
-        xhr.send(data);
-
-    }
-
-
-
-    $(".ab").on("click", ".item", function() {
-
-        var the_image_name = $(this).attr('class').split(' ')[2];
-        remove_image(the_image_name);
-        $(this).fadeOut();
-
-
-
-    });
-
-
-    get_all_image();
-
-
-
-    Dropzone.options.uploadWidget = {
-        paramName: 'file',
-        maxFilesize: 0.1,
-        maxFiles: 5,
-        dictDefaultMessage: 'Drop files here',
-        headers: {
-            'postid': "11111",
-        },
-        acceptedFiles: 'image/*',
-        init: function() {
-            this.on('success', function(file, resp) {});
-            this.on("complete", function(file) {
-                if (this.getUploadingFiles().length === 0 && this.getQueuedFiles().length === 0) {
-
-                    $('.dz-preview').delay(5000).fadeOut();
-                    get_all_image();
-                }
-            });
-            this.on("drop", function() {
-                var _this = this;
-                _this.removeAllFiles();
-            });
-
+          async: true,
+          crossDomain: true,
+          url: "http://127.0.0.1:3000/api/upload",
+          method: "GET",
         }
 
-    };
+        $.ajax(settings).done(function (response) {
+          var obj = response
+          $(".ab").html("")
+
+          $.each(obj, function (index, value) {
+            var str = ""
+            str +=
+              '<div class="item ' +
+              value.name +
+              " " +
+              value._id +
+              '" style="background-image:url(../uploads/' +
+              value.name +
+              ')">'
+            str += "</div>"
+
+            $(".ab").prepend(str)
+          })
+        })
+      }
+
+      function remove_image(name) {
+        var data = "id=" + name
+
+        var xhr = new XMLHttpRequest()
+        xhr.withCredentials = true
+
+        xhr.addEventListener("readystatechange", function () {
+          if (this.readyState === 4) {
+            console.log(this.responseText)
+          }
+        })
+
+        xhr.open("DELETE", "http://127.0.0.1:3000/api/upload")
+        xhr.setRequestHeader("cache-control", "no-cache")
+        xhr.setRequestHeader(
+          "content-type",
+          "application/x-www-form-urlencoded"
+        )
+
+        xhr.send(data)
+      }
+
+      $(".ab").on("click", ".item", function () {
+        var the_image_name = $(this).attr("class").split(" ")[2]
+        remove_image(the_image_name)
+        $(this).fadeOut()
+      })
+
+      get_all_image()
+
+      Dropzone.options.uploadWidget = {
+        paramName: "file",
+        maxFilesize: 0.1,
+        maxFiles: 5,
+        dictDefaultMessage: "Drop files here",
+        headers: {
+          postid: "11111",
+        },
+        acceptedFiles: "image/*",
+        init: function () {
+          this.on("success", function (file, resp) {})
+          this.on("complete", function (file) {
+            if (
+              this.getUploadingFiles().length === 0 &&
+              this.getQueuedFiles().length === 0
+            ) {
+              $(".dz-preview").delay(5000).fadeOut()
+              get_all_image()
+            }
+          })
+          this.on("drop", function () {
+            var _this = this
+            _this.removeAllFiles()
+          })
+        },
+      }
     </script>
     <style>
-    .dropzone.dz-clickable {
+      .dropzone.dz-clickable {
         cursor: pointer;
         max-width: 805px;
         margin: 0 auto;
         /* height: 196px; */
-    }
-    
-    .dropzone {
+      }
+
+      .dropzone {
         border: 2px dashed rgba(0, 0, 0, 0.3);
         border-radius: 24px;
         font-size: 20px;
         color: #868686;
-    }
-    
-    .ab {
+      }
+
+      .ab {
         max-width: 805px;
         margin: 0 auto;
         margin-top: 20px;
-    }
-    
-    .ab .item {
+      }
+
+      .ab .item {
         border-radius: 24px;
         width: 111px;
         height: 111px;
@@ -136,8 +137,7 @@
         cursor: pointer;
         position: relative;
         z-index: 9999;
-    }
+      }
     </style>
-</body>
-
+  </body>
 </html>

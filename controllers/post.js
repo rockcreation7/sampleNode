@@ -1,83 +1,67 @@
-var Post = require('../models/post');
+var Post = require("../models/post")
 
-exports.postPost = function(req, res) {
+exports.postPost = function (req, res) {
+  var post = new Post()
 
-  var post = new Post();
+  post.title = req.body.title
+  post.des = req.body.des
+  post.content = req.body.content
+  post.photo = req.body.photo
 
-  post.title = req.body.title;
+  post.save(function (err) {
+    if (err) res.send(err)
 
-  post.des = req.body.des;
+    res.json({ message: "Post added!", data: post })
+  })
+}
 
-  post.content = req.body.content;
+exports.getPosts = function (req, res) {
+  Post.find(
+    {},
+    null,
+    {
+      sort: {
+        created_a: -1,
+      },
+    },
+    function (err, posts) {
+      if (err) res.send(err)
 
-  post.photo = req.body.photo;
-
- 
- post.save(function(err) {
-    if (err)
-      res.send(err);
-
-    res.json({ message: 'Post added!', data: post });
-  });
-
-};
-
-exports.getPosts = function(req, res) {
-
-  Post.find({}, null, {
-     sort:{
-         created_a: -1 
+      res.json(posts)
     }
-}, function(err, posts) {
-    if (err)
-      res.send(err);
+  )
+}
 
-    res.json(posts);
-  });
+exports.getPost = function (req, res) {
+  Post.find({ _id: req.params.post_id }, function (err, post_detail) {
+    if (err) res.send(err)
 
-};
+    res.json(post_detail)
+  })
+}
 
-exports.getPost = function(req, res) {
+exports.deletePost = function (req, res) {
+  Post.remove({ _id: req.params.post_id }, function (err) {
+    if (err) res.send(err)
 
-  Post.find({  _id: req.params.post_id }, function(err, post_detail) {
-    if (err)
-      res.send(err);
+    res.json({ message: "Post removed" })
+  })
+}
 
-    res.json(post_detail);
-  });
-
-};
-
-
-
-
-exports.deletePost = function(req, res) {
-
-  Post.remove({ _id: req.params.post_id }, function(err) {
-    if (err)
-      res.send(err);
-
-    res.json({ message: 'Post removed' });
-  });
-};
-
-
-exports.putPost= function(req, res) {
-
+exports.putPost = function (req, res) {
   Post.update(
+    { _id: req.params.post_id },
+    {
+      title: req.body.title,
+      des: req.body.des,
+      content: req.body.content,
+      photo: req.body.photo,
+    },
 
-    { _id: req.params.post_id  },
-    { title : req.body.title,
-      des : req.body.des,
-      content : req.body.content,
-      photo : req.body.photo,
+    function (err, num, raw) {
+      if (err) res.send(err)
 
-     },
-
-    function(err, num, raw) {
-    if (err)
-      res.send(err);
-
-    res.json({ message: num + ' updated' });
-  });
-};
+      res.json({ message: num + " updated" })
+    }
+  )
+}
